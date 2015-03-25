@@ -6,18 +6,26 @@ import (
 )
 
 func Remind(text string, paus time.Duration) {
-	tickChannel := time.Tick(paus)
 	for {
-		select {
-		case now := <-tickChannel:
-			fmt.Printf(text, now.Format("15:04:05"))
+		a := time.Now().Hour()
+		b := time.Now().Minute()
+		c := time.Now().Format("15:04")
+		if b == 0 {
+			if a%3 == 0 {
+				fmt.Println(text + c + " Dags att äta")
+			}
+			if a%8 == 0 {
+				fmt.Println(text + c + " Dags att arbeta")
+			}
+			if a%24 == 0 {
+				fmt.Println(text + c + " Dags att sova")
+			}
+
 		}
+		time.Sleep(paus * time.Minute)
 	}
 }
 
 func main() {
-	go Remind("Klockan är %s Dags att äta\n", 3*time.Second)
-	go Remind("Klockan är %s Dags att arbeta\n", 8*time.Second)
-	go Remind("Klockan är %s Dags att sova\n", 24*time.Second)
-	select {}
+	Remind("Klockan är nu ", 1)
 }
